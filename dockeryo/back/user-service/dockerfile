@@ -1,0 +1,19 @@
+# Utilise une image légère de Node.js
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copie les fichiers package.json pour installer les dépendances
+COPY package*.json ./
+
+# Installe les dépendances dans le conteneur, y compris js-yaml
+RUN npm install dockerode cors express http-proxy-middleware jsonwebtoken js-yaml
+
+# Copie le reste des fichiers de l'application
+COPY . .
+
+# Expose le port 3000 pour le service utilisateur
+EXPOSE 3000
+
+# Lance le serveur
+CMD ["node", "server.mjs"]

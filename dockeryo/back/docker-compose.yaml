@@ -1,0 +1,23 @@
+version: '3.8'  # Version de la syntaxe Docker Compose
+
+services:
+  user-service:
+    build:
+      context: ./user-service  # Chemin vers le Dockerfile du service utilisateur
+    ports:
+      - "3000:3000"  # Expose le port 3000 pour le web
+    environment:
+      - NODE_ENV=production  # Variables d'environnement si nécessaire
+    networks:
+      - app-network  # Utilise le réseau défini ci-dessous
+
+  admin-service:
+    build:
+      context: ./admin-service  # Chemin vers le Dockerfile du service administrateur
+    environment:
+      - NODE_ENV=production  # Variables d'environnement si nécessaire
+    networks:
+      - app-network  # Utilise le même réseau
+
+networks:
+  app-network:  # Création d'un réseau Docker nommé app-network
