@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  web:
+    image: nginx:latest
+    container_name: demo_project_web  # Ajoute un nom spécifique pour le conteneur
+    ports:
+      - "8080:80"
+    networks:
+      - demo_network
+
+  db:
+    image: postgres:13
+    container_name: demo_project_db  # Ajoute un nom spécifique pour le conteneur
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: test_db
+    ports:
+      - "5432:5432"
+    networks:
+      - bigNetwork
+
+networks:
+  demo_network: {}  # Définit demo_network pour web
+  bigNetwork: {}    # Définit bigNetwork pour db

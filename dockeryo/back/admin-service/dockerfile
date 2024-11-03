@@ -17,4 +17,4 @@ COPY . .
 EXPOSE 4000
 
 # Lance le serveur
-CMD ["node", "adminServer.mjs"]
+CMD ["node", "./AdminServer.mjs"]

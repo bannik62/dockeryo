@@ -1,0 +1,25 @@
+project_name: demo_project
+description: " blablablablablablalaablablablablablablablabla Ce projet utilise Nginx et PostgreSQL pour démontrer un déploiement de conteneurs."
+
+
+containers:
+  - name: web
+    image: nginx:latest
+    ports:
+      - "8080:80"
+    networks:
+      - demo_network
+
+  - name: db
+    image: postgres:13
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: test_db
+    ports:
+      - "5432:5432"
+    networks:
+      - bigNetwork
+
+networks:
+  - bigNetwork

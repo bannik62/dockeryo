@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  demo_web:
+    image: nginx:latest
+    container_name: demo_web
+    ports:
+      - "8080:80"
+    networks:
+      - demo_network
+
+  demo_db:
+    image: postgres:13
+    container_name: demo_db
+    environment:
+      POSTGRES_USER: test_user
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: test_db
+    ports:
+      - "5432:5432"
+    networks:
+      - demo_project_network
+      - demo_network
+
+networks:
+  demo_network:
+  demo_project_network:
+   

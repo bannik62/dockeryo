@@ -4,6 +4,8 @@ services:
   user-service:
     build:
       context: ./user-service  # Chemin vers le Dockerfile du service utilisateur
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
     ports:
       - "3000:3000"  # Expose le port 3000 pour le web
     environment:

@@ -9,7 +9,14 @@ COPY package*.json ./
 # Installe les dépendances dans le conteneur, y compris js-yaml
 RUN npm install dockerode cors express http-proxy-middleware jsonwebtoken js-yaml
 
-# Copie le reste des fichiers de l'application
+# Installez Docker CLI et les outils nécessaires
+RUN apk add --no-cache docker-cli curl
+
+# Téléchargez le plugin docker-compose en tant que binaire
+RUN mkdir -p ~/.docker/cli-plugins/ \
+    && curl -SL https://github.com/docker/compose/releases/download/v2.1.1/docker-compose-linux-x86_64 -o ~/.docker/cli-plugins/docker-compose \
+    && chmod +x ~/.docker/cli-plugins/docker-compose
+
 COPY . .
 
 # Expose le port 3000 pour le service utilisateur

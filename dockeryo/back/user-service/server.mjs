@@ -25,9 +25,13 @@ app.use('/projects', (req, res, next) => {
 }, projectRoutes);
 
 app.use('/containers', (req, res, next) => {
-    console.log('Accès à la route /containers');
+    console.log(`Accès à la route ${req.method} ${req.url}`);
+    console.log(`Corps de la requête :`, req.body); // Affiche le corps pour POST, PUT, etc.
+    console.log(`Paramètres de la requête :`, req.params); // Affiche les paramètres de route
+    console.log(`Query :`, req.query); // Affiche les paramètres de requête dans l'URL (pour GET)
     next();
 }, containerRoutes);
+
 
 // Middleware de redirection pour les administrateurs
 app.use('/admin-service', authMiddleware, createProxyMiddleware({
