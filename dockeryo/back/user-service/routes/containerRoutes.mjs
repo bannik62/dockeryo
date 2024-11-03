@@ -161,6 +161,27 @@ router.get('/:project/status', async (req, res) => {
 });
 
 
+// Crée une route pour l'événement de streaming des logs
+router.get('/:project/logs', (req, res) => {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    const projectName = req.params.project;
+    const composeFilePath = path.join(__dirname, '../project', projectName, 'docker-compose.yml');
+
+    // Simulation de logs pour le conteneur, à remplacer par des appels docker
+    res.write(`data: Initialisation du démarrage du projet ${projectName}\n\n`);
+
+    // Démarrage du conteneur et envoi des logs en temps réel
+    startContainer(projectName, composeFilePath, res);
+});
+
+function startContainer(projectName, composeFilePath, res) {
+    // Ici, remplace par le code de démarrage réel de docker et transmet les logs
+    res.write(`data: Démarrage du conteneur pour ${projectName}...\n\n`);
+    setTimeout(() => res.write("data: Conteneur démarré avec succès\n\n"), 3000);
+}
 
 
 
