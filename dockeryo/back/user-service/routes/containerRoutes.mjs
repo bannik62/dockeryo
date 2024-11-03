@@ -123,20 +123,59 @@ router.post('/:project/start', async (req, res) => {
     }
 });
 
+// Route pour obtenir le statut des conteneurs d'un projet
+router.get('/:project/status', async (req, res) => {
+    const projectName = req.params.project;
+    console.log("project", projectName);
+    
+    console.log(`Récupération de l'état des conteneurs pour le projet : ${projectName}`);
+    
+    try {
+        // Lecture et parsing du fichier docker-compose.yml pour obtenir les noms de conteneurs
+        const composeFilePath = path.join(__dirname, '../project', projectName, 'docker-compose.yml');
+        const fileContents = await fs.readFile(composeFilePath, 'utf8');
+        const config = yaml.load(fileContents);
+        
+        const containersStatus = await Promise.all(
+            Object.keys(config.services).map(async (containerName) => {
+                const container = docker.getContainer(containerName);
+                try {
+                    const containerInfo = await container.inspect();
+                    console.log("containerinfo ", containerInfo.State);
+                    
+                    return {
+                        name: containerName,
+                        status: containerInfo.State.Running ? 'running' : 'stopped'
+                    };
+                } catch (error) {
+                    return { name: containerName, status: 'not_found' };
+                }
+            })
+        );
+
+        res.json(containersStatus);
+    } catch (error) {
+        console.error(`Erreur lors de la récupération de l'état des conteneurs pour ${projectName} :`, error.message);
+        res.status(500).json({ error: 'Erreur lors de la récupération de l\'état des conteneurs.' });
+    }
+});
 
 
 
+
+
+
+// Dans `containerRoutes.mjs` ou un fichier backend similaire
 router.post('/:project/containers/:id/stop', async (req, res) => {
     try {
-        console.log(`Arrêt du conteneur avec l'ID : ${req.params.id}`);
         const container = docker.getContainer(req.params.id);
         await container.stop();
         res.json({ message: 'Conteneur arrêté', id: req.params.id });
     } catch (error) {
-        console.error(`Erreur lors de l'arrêt du conteneur ${req.params.id}:`, error);
         res.status(500).json({ message: 'Erreur lors de l\'arrêt du conteneur' });
     }
 });
+
 
 router.get('/:project/containers/:id', async (req, res) => {
     try {
